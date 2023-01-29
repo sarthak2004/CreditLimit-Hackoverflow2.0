@@ -23,12 +23,11 @@ This Machine Learning app calculates maximum Credit limit based on your performa
   
 |                                  |                                              |
 |----------------------------------|----------------------------------------------|
-| 1. Annual Income                 | 7.  Number of open Accounts                  |
-| 2. Current Loan Amount           | 8.  Years since Account opening              |
-| 3. Home ownership                | 9.  Tax liens                                |
-| 4. Credit Score                  | 10. Years Since Current Job                  |
-| 5. Montlhy Debt                  | 11. Bankruptcies                             |
-| 6. Account Balance               |                                              |
+| 1. Annual Income                 | 6.  Number of open Accounts                  |
+| 2. Current Loan Amount           | 7.  Years since Account opening              |
+| 3. Home ownership                | 8.  Tax liens                                |
+| 4. Montlhy Debt                  | 9. Years Since Current Job                   |
+| 5. Account Balance               | 10. Bankruptcies                             |
 </div>
 
 ## References
