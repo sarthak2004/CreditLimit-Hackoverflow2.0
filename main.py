@@ -1,6 +1,5 @@
 import gradio as gr
 import numpy as np
-import  requests 
 import pandas as pd
 import pandas as pd
 import numpy as np
