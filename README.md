@@ -36,4 +36,4 @@ This Machine Learning app calculates maximum Credit limit based on your performa
 - Regression Logic: https://youtube.com/playlist?list=PL_h2yd2CGtBHEKwEH5iqTZH85wLS-eUzv
 
 ## Requirements
-- run pip install -r requirements.txt in your shell to install all the libraries required to run the Project
+- run `pip install -r requirements.txt` in your shell to install all the libraries required to run the Project
