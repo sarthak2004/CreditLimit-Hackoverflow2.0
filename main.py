@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+import math
 
 dataset = pd.read_csv('./flagged/credit_score_predict.csv')
 dataset_2 = dataset.drop(['Loan ID', 'Customer ID', 'Months since last delinquent'], axis = 'columns')
@@ -22,40 +23,38 @@ dataset_7 = dataset_6.drop(['Years in current job', 'Home_Ownership', 'Purpose',
 dataset_7.rename(columns = {'Home Mortgage' : 'Home_Mortgage', 'Own Home' : 'Own_Home', 'Long Term' : 'Long_Term'})
 dataset_7.dropna()
 
-X = dataset_7.drop(['Maximum_Open_Credit', 'Number_of_Credit_Problems', 'Long Term', 'Credit_Score'], axis = 'columns')
+X = dataset_7.drop(['Maximum_Open_Credit', 'Number_of_Credit_Problems', 'Long Term', 'Credit_Score', 'Current_Loan_Amount', 'Bankruptcies', 'Tax_Liens'], axis = 'columns')
 Y = dataset_7.Maximum_Open_Credit
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.15, random_state = 15)
 LR = LinearRegression()
 LR.fit(X_train, Y_train)
 
-def predict_credit_limit (Ownership, Current_Loan_Amount, Bankruptcies, Tax_Liens, Annual_Income, Monthly_Debt, Years_of_Credit_History, Number_of_Open_Accounts, Current_Credit_Balance, refined_jobYears):
+def predict_credit_limit (Ownership, Annual_Income, Monthly_Debt, Years_of_Credit_History, Number_of_Open_Accounts, Current_Credit_Balance, refined_jobYears):
   ownership_index = np.where(X.columns == Ownership)[0]
   x = np.zeros(len(X.columns))
-  x[0] = Current_Loan_Amount
-  x[1] = Annual_Income
-  x[2] = Monthly_Debt
-  x[3] = Years_of_Credit_History
-  x[4] = Number_of_Open_Accounts
-  x[5] = Current_Credit_Balance
-  x[6] = Bankruptcies
-  x[7] = Tax_Liens
-  x[8] = refined_jobYears
+  
+  x[0] = Annual_Income
+  x[1] = Monthly_Debt
+  x[2] = Years_of_Credit_History
+  x[3] = Number_of_Open_Accounts
+  x[4] = Current_Credit_Balance
+  x[5] = refined_jobYears
   
   if ownership_index >= 0:
     x[ownership_index] = 1
   
   return LR.predict([x])[0]
 
-def credit_calculate(Annual_Income,Current_Loan_Amount,Montlhy_Debt,Account_Balance,Number_Of_Open_Accounts,Years_Since_Account_Opening,Years_Since_Current_Job,Tax_liens,Bankruptcies,Home_ownership):
-  predicted = predict_credit_limit(Home_ownership,int(Current_Loan_Amount),Bankruptcies,Tax_liens, int(Annual_Income),int(Montlhy_Debt),float(Years_Since_Account_Opening),int(Number_Of_Open_Accounts),int(Account_Balance),int(Years_Since_Current_Job))
+def credit_calculate(Annual_Income,Montlhy_Debt,Account_Balance,Number_Of_Open_Accounts,Years_Since_Account_Opening,Years_Since_Current_Job,Home_ownership):
+  predicted = predict_credit_limit(Home_ownership, float(Annual_Income),float(Montlhy_Debt),float(Years_Since_Account_Opening),int(Number_Of_Open_Accounts),int(Account_Balance),int(Years_Since_Current_Job))
   if predicted < 0:
     return 0
-  return predicted
+  return str(round(predicted/100000, 3)) + "Lakh(s)"
     
 
 interface = gr.Interface(
     fn = credit_calculate,
-    inputs = ["text","text", "text","text", "text","text","text",gr.inputs.Slider(0,20,label="Tax_liens"),gr.inputs.Slider(0,20,label="Bankruptcies"),gr.Radio(["Own_Home", "Home_Mortgage", "Rent"])],
+    inputs = ["text", "text","text", "text",gr.inputs.Slider(0,50,label="Years Of Professional Experience"),gr.inputs.Slider(0,50,label="Years Since Account Opening"),gr.Radio(["Own_Home", "Home_Mortgage", "Rent"])],
     outputs = ["text"]
 )
 
